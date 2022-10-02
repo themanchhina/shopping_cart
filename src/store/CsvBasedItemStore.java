@@ -53,10 +53,10 @@ public class CsvBasedItemStore implements ItemStore {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while((line = reader.readLine()) != null) {
-                Item item = readItem(line);
+                ExtendedItem item = readItem(line);
                 if (item.getId() == id) {
                     toRemove = item;
-                    isActive = isActive(line);
+                    isActive = item.isActive();
                     break;
                 }
             }
@@ -73,7 +73,24 @@ public class CsvBasedItemStore implements ItemStore {
 
     @Override
     public List<Item> listItems() {
-        return new ArrayList();
+        List<ExtendedItem> items = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while((line = reader.readLine()) != null) {
+                ExtendedItem item = readItem(line);
+                items.add(item);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to remove item");
+        }
+
+        return items
+                .stream()
+                .collect(Collectors.groupingBy(Item::getId))
+                .values().stream()
+                .map(groupedItems -> groupedItems.get(groupedItems.size() - 1))
+                .filter(ExtendedItem::isActive)
+                .collect(Collectors.toList());
     }
 
     private int getId() {
@@ -86,24 +103,21 @@ public class CsvBasedItemStore implements ItemStore {
         b.append(SEPARATOR);
         b.append(item.getPrice());
         b.append(SEPARATOR);
-        b.append(item.getContent());
+        b.append(escape(item.getContent()));
         b.append(SEPARATOR);
         b.append(active);
         b.append("\n");
         return b.toString();
     }
 
-    private Item readItem(String row) {
+    private ExtendedItem readItem(String row) {
         String[] cells = row.split(SEPARATOR);
-        return new Item(
+        return new ExtendedItem(
                 Integer.parseInt(cells[0]),
                 Integer.parseInt(cells[1]),
-                escape(cells[2])
+                unescape(cells[2]),
+                Boolean.parseBoolean(cells[3])
         );
-    }
-
-    private boolean isActive(String row) {
-        return Boolean.parseBoolean(row.split(SEPARATOR)[3]);
     }
 
     private String escape(String unescaped) {
@@ -112,5 +126,23 @@ public class CsvBasedItemStore implements ItemStore {
 
     private String unescape(String escaped) {
         return escaped.replaceAll(String.format("\\%s", SEPARATOR), SEPARATOR);
+    }
+
+    private class ExtendedItem extends Item {
+        private boolean active;
+
+        public ExtendedItem(
+                int id,
+                int price,
+                String content,
+                boolean active
+        ) {
+            super(id, price, content);
+            this.active = active;
+        }
+
+        public boolean isActive() {
+            return active;
+        }
     }
 }
