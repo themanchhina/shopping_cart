@@ -12,7 +12,7 @@ public class Cart {
     }
 
     public List<Item> listItems() {
-        return null;
+        return itemStore.listItems();
     }
 
     public Item addItem(int price, String content) {

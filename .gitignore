@@ -7,3 +7,4 @@
 
 # Except these directories
 !src
+!resources
