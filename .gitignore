@@ -1,0 +1,9 @@
+# Ignore Everything by default
+/*
+
+# Except these files
+!.gitignore
+!README.md
+
+# Except these directories
+!src
