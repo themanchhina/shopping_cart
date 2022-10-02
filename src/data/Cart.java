@@ -16,10 +16,10 @@ public class Cart {
     }
 
     public Item addItem(int price, String content) {
-        return null;
+        return itemStore.addItem(price, content);
     }
 
     public int removeItem(int id) {
-        return 0;
+        return itemStore.removeItem(id);
     }
 }
