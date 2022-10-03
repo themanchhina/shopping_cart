@@ -4,7 +4,13 @@
 # Except these files
 !.gitignore
 !README.md
+!build.gradle
+!gradlew
+!gradlew.bat
+!settings.gradle
 
 # Except these directories
 !src
+!v1
 !resources
+!gradle
