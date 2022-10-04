@@ -26,7 +26,18 @@ public class CartController implements CartApi {
     @Override
     public ResponseEntity addItem(Integer cartId, Item item) {
         return cartRepository.findById(cartId)
-                .map(cart -> {cart.addItemsItem(item); return new ResponseEntity(cart, HttpStatus.OK);})
-                .orElseThrow(IllegalArgumentException::new);
+                .map(cart -> {
+                    Cart updated = cart.addItemsItem(item.withCart(cart));
+                    cartRepository.save(updated);
+                    return new ResponseEntity(cart, HttpStatus.OK);
+                })
+                .orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
+    }
+
+    @Override
+    public ResponseEntity listItems(Integer cartId) {
+        return cartRepository.findById(cartId)
+                .map(cart -> new ResponseEntity(cart, HttpStatus.OK))
+                .orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
     }
 }

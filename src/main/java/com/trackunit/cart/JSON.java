@@ -21,6 +21,7 @@ import com.google.gson.internal.bind.util.ISO8601Utils;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.google.gson.JsonElement;
+import com.trackunit.cart.model.Item;
 import io.gsonfire.GsonFireBuilder;
 
 import okio.ByteString;
@@ -91,7 +92,7 @@ public class JSON {
         gsonBuilder.registerTypeAdapter(LocalDate.class, localDateTypeAdapter);
         gsonBuilder.registerTypeAdapter(byte[].class, byteArrayAdapter);
         gsonBuilder.registerTypeAdapterFactory(new com.trackunit.cart.model.Cart.CustomTypeAdapterFactory());
-        gsonBuilder.registerTypeAdapterFactory(new com.trackunit.cart.model.Item.CustomTypeAdapterFactory());
+        gsonBuilder.registerTypeAdapterFactory(new Item.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new com.trackunit.cart.model.Price.CustomTypeAdapterFactory());
         gson = gsonBuilder.create();
     }

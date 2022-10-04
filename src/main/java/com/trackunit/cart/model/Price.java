@@ -34,6 +34,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.trackunit.cart.JSON;
+import org.hibernate.annotations.Type;
+
+import javax.persistence.Entity;
 
 /**
  * Price

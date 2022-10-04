@@ -118,7 +118,7 @@ components:
       type: object
       properties:
         id:
-          $ref: '#/components/schemas/Item'
+          $ref: '#/components/schemas/ItemId'
         price:
           $ref: '#/components/schemas/Price'
         content:

@@ -19,7 +19,6 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.trackunit.cart.data.extension.ItemEntity;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class Cart {
   private Integer id;
 
   public static final String SERIALIZED_NAME_ITEMS = "items";
-  @OneToMany(targetEntity=ItemEntity.class, mappedBy="cart", fetch=FetchType.EAGER)
+  @OneToMany(targetEntity= Item.class, mappedBy="cart", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
   @SerializedName(SERIALIZED_NAME_ITEMS)
   private List<Item> items = new ArrayList<>();
 
