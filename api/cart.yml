@@ -1,0 +1,133 @@
+openapi: 3.0.3
+info:
+  title: shoppint-cart-service
+  description: Shopping Cart API
+  version: 1.0.0
+
+servers:
+  - url: http://dev.cart.bluecrew.com/api/v1
+  - url: http://localhost:8080/api/v1
+
+paths:
+  /cart:
+    post:
+      operationId: createCart
+      description: Create a new cart
+      responses:
+        '200':
+          description: Successful create
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartId'
+
+  /cart/{cartId}:
+    get:
+      operationId: listItems
+      description: List items in cart
+      parameters:
+        - name: cartId
+          in: path
+          description: Cart ID
+          required: true
+          schema:
+            $ref: '#/components/schemas/CartId'
+      responses:
+        '200':
+          description: Cart object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+
+  /cart/{cartId}/item:
+    post:
+      operationId: addItem
+      description: Add item to cart
+      parameters:
+        - name: cartId
+          in: path
+          description: Cart ID
+          required: true
+          schema:
+            $ref: '#/components/schemas/CartId'
+      responses:
+        '200':
+          description: Version history
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+
+  /cart/{cartId}/item/{itemId}:
+    patch:
+      operationId: updateItem
+      description: Update item
+      parameters:
+        - name: cartId
+          in: path
+          description: Cart ID
+          required: true
+          schema:
+            $ref: '#/components/schemas/CartId'
+        - name: itemId
+          in: path
+          description: Item ID
+          required: true
+          schema:
+            $ref: '#/components/schemas/ItemId'
+      responses:
+        '200':
+          description: Version history
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+
+components:
+  schemas:
+
+    CartId:
+      type: integer
+      format: int32
+      minimum: 0
+
+    ItemId:
+      type: integer
+      format: int32
+      minimum: 0
+
+    Cart:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/CartId'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+      required: [id, items]
+
+    Item:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Item'
+        price:
+          $ref: '#/components/schemas/Price'
+        content:
+          type: string
+        active:
+          type: boolean
+      required: [id, price, content]
+
+    Price:
+      type: object
+      properties:
+        unit:
+          type: string
+          enum: ['USD', 'UNKNOWN']
+        amount:
+          type: integer
+          format: int32
+      required: [unit, amount]
