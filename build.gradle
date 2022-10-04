@@ -11,7 +11,7 @@ sourceCompatibility = '11'
 
 openApiGenerate {
 	inputSpec = 'api/cart.yml'
-	generatorName = 'java'
+	generatorName = 'spring'
 	generateModelTests = false
 	generateApiTests = false
 	configOptions = [

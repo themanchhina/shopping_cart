@@ -82,6 +82,12 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/ItemId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cart'
       responses:
         '200':
           description: Version history
@@ -89,6 +95,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Item'
+
+  /item/{itemId}:
+    patch:
+      operationId: removeItem
+      description: Remove item
+      parameters:
+        - name: itemId
+          in: path
+          description: Item ID
+          required: true
+          schema:
+            $ref: '#/components/schemas/ItemId'
+      responses:
+        '200':
+          description: Version history
 
 components:
   schemas:

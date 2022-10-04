@@ -10,12 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
+import java.util.stream.Collectors;
+
 @Controller
 public class CartController implements CartApi {
     @Autowired
     private CartRepository cartRepository;
-    @Autowired
-    private ItemRepository itemRepository;
 
     @Override
     public ResponseEntity<Integer> createCart() {
@@ -27,9 +27,9 @@ public class CartController implements CartApi {
     public ResponseEntity addItem(Integer cartId, Item item) {
         return cartRepository.findById(cartId)
                 .map(cart -> {
-                    Cart updated = cart.addItemsItem(item.withCart(cart));
+                    Cart updated = cart.addItemsItem(item.withCart(cart).active(true));
                     cartRepository.save(updated);
-                    return new ResponseEntity(cart, HttpStatus.OK);
+                    return listItems(cartId);
                 })
                 .orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
     }
@@ -37,7 +37,11 @@ public class CartController implements CartApi {
     @Override
     public ResponseEntity listItems(Integer cartId) {
         return cartRepository.findById(cartId)
-                .map(cart -> new ResponseEntity(cart, HttpStatus.OK))
+                .map(cart -> new ResponseEntity(cart.items(cart
+                        .getItems()
+                        .stream()
+                        .filter(item -> Boolean.TRUE.equals(item.getActive()))
+                        .collect(Collectors.toList())), HttpStatus.OK))
                 .orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
     }
 }
