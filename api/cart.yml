@@ -51,13 +51,19 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/CartId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
       responses:
         '200':
           description: Version history
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Item'
+                $ref: '#/components/schemas/Cart'
 
   /cart/{cartId}/item/{itemId}:
     patch:
@@ -106,7 +112,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Item'
-      required: [id, items]
+      required: [items]
 
     Item:
       type: object
@@ -119,7 +125,7 @@ components:
           type: string
         active:
           type: boolean
-      required: [id, price, content]
+      required: [price, content]
 
     Price:
       type: object

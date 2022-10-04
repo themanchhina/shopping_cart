@@ -9,24 +9,28 @@ import com.trackunit.cart.model.Cart;
 import com.trackunit.cart.model.Item;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Generated;
-import javax.validation.constraints.Min;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-04T00:23:22.578799-04:00[America/Toronto]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-10-04T01:32:50.216351-04:00[America/Toronto]")
 @Validated
 @Tag(name = "cart", description = "the cart API")
 @RequestMapping("${openapi.shoppintCartService.base-path:/api/v1}")
@@ -41,28 +45,31 @@ public interface CartApi {
      * Add item to cart
      *
      * @param cartId Cart ID (required)
+     * @param item  (required)
      * @return Version history (status code 200)
      */
     @Operation(
         operationId = "addItem",
         responses = {
             @ApiResponse(responseCode = "200", description = "Version history", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Item.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Cart.class))
             })
         }
     )
     @RequestMapping(
         method = RequestMethod.POST,
         value = "/cart/{cartId}/item",
-        produces = { "application/json" }
+        produces = { "application/json" },
+        consumes = { "application/json" }
     )
-    default ResponseEntity<Item> addItem(
-        @Min(0) @Parameter(name = "cartId", description = "Cart ID", required = true) @PathVariable("cartId") Integer cartId
+    default ResponseEntity<Cart> addItem(
+        @Min(0) @Parameter(name = "cartId", description = "Cart ID", required = true) @PathVariable("cartId") Integer cartId,
+        @Parameter(name = "Item", description = "", required = true) @Valid @RequestBody Item item
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"price\" : { \"unit\" : \"USD\", \"amount\" : 6 }, \"active\" : true, \"content\" : \"content\" }";
+                    String exampleString = "{ \"id\" : 0, \"items\" : [ { \"price\" : { \"unit\" : \"USD\", \"amount\" : 6 }, \"active\" : true, \"content\" : \"content\" }, { \"price\" : { \"unit\" : \"USD\", \"amount\" : 6 }, \"active\" : true, \"content\" : \"content\" } ] }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
